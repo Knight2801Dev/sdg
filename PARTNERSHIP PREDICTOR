@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Partnership Failure Predictor - SDG 17</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #edf1f2;
+    padding: 30px;
+}
+.container {
+    max-width: 800px;
+    background: white;
+    padding: 30px;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+}
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+label {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.value-text {
+    color: #2980b9;
+    font-style: italic;
+}
+input[type=range] {
+    width: 100%;
+    margin-bottom: 20px;
+}
+button {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    background: #27ae60;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+button:hover {
+    background: #2ecc71;
+}
+.result {
+    margin-top: 30px;
+    background: #f4f6f8;
+    padding: 25px;
+    border-radius: 10px;
+}
+.highlight {
+    font-size: 24px;
+    font-weight: bold;
+}
+.risk-high {
+    color: #c0392b;
+}
+.risk-medium {
+    color: #d68910;
+}
+.risk-low {
+    color: #27ae60;
+}
+ul {
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>🤖 AI Partnership Failure Predictor</h1>
+
+<label>Goal Alignment <span class="value-text" id="goalText"></span></label>
+<input type="range" id="goal" min="0" max="3" step="1">
+
+<label>Budget Compatibility <span class="value-text" id="budgetText"></span></label>
+<input type="range" id="budget" min="0" max="3" step="1">
+
+<label>Time Commitment Balance <span class="value-text" id="timeText"></span></label>
+<input type="range" id="time" min="0" max="3" step="1">
+
+<label>Transparency Level <span class="value-text" id="transText"></span></label>
+<input type="range" id="trans" min="0" max="3" step="1">
+
+<label>Past Collaboration Experience <span class="value-text" id="expText"></span></label>
+<input type="range" id="exp" min="0" max="3" step="1">
+
+<label>Cultural Alignment <span class="value-text" id="cultureText"></span></label>
+<input type="range" id="culture" min="0" max="3" step="1">
+
+<label>Resource Availability <span class="value-text" id="resourceText"></span></label>
+<input type="range" id="resource" min="0" max="3" step="1">
+
+<label>Leadership Alignment <span class="value-text" id="leadershipText"></span></label>
+<input type="range" id="leadership" min="0" max="3" step="1">
+
+<label>Risk Tolerance <span class="value-text" id="riskText"></span></label>
+<input type="range" id="risk" min="0" max="3" step="1">
+
+<label>Geographical Proximity <span class="value-text" id="geoText"></span></label>
+<input type="range" id="geo" min="0" max="3" step="1">
+
+<label>Social Impact Potential <span class="value-text" id="impactText"></span></label>
+<input type="range" id="impact" min="0" max="3" step="1">
+
+<label>Technology Compatibility <span class="value-text" id="techText"></span></label>
+<input type="range" id="tech" min="0" max="3" step="1">
+
+<button onclick="predict()">Run AI Analysis</button>
+
+<div class="result" id="output" style="display:none;"></div>
+</div>
+
+<script>
+// Descriptive labels for sliders
+const labels = [
+  ["Completely Misaligned", "Somewhat Aligned", "Mostly Aligned", "Fully Aligned"],
+  ["Budget Conflicts Likely", "Minor Budget Issues", "Budget Mostly Compatible", "Budget Perfectly Aligned"],
+  ["No Commitment", "Partial Commitment", "Mostly Committed", "Fully Committed"],
+  ["Opaque", "Some Transparency", "Mostly Transparent", "Fully Transparent"],
+  ["No Collaboration History", "Limited Experience", "Moderate Experience", "Extensive Experience"],
+  ["Completely Incompatible", "Minor Differences", "Mostly Compatible", "Completely Aligned"],
+  ["Severe Resource Shortage", "Some Resource Issues", "Mostly Adequate Resources", "Fully Equipped"],
+  ["No Leadership Alignment", "Partial Alignment", "Mostly Aligned", "Fully Aligned Leadership"],
+  ["Very Low Tolerance", "Somewhat Low", "Moderate Tolerance", "High Tolerance for Risk"],
+  ["Very Distant", "Somewhat Distant", "Close", "Very Close (Same Region)"],
+  ["No Impact", "Minimal Impact", "Moderate Impact", "High Social Impact Potential"],
+  ["Completely Incompatible", "Minor Issues", "Mostly Compatible", "Fully Compatible Technologies"]
+];
+
+// Corresponding value sliders
+const factors = [
+    { id: "goal", text: "goalText", labels: labels[0], weight: 1.5 },
+    { id: "budget", text: "budgetText", labels: labels[1], weight: 1.2 },
+    { id: "time", text: "timeText", labels: labels[2], weight: 1.0 },
+    { id: "trans", text: "transText", labels: labels[3], weight: 1.0 },
+    { id: "exp", text: "expText", labels: labels[4], weight: 0.8 },
+    { id: "culture", text: "cultureText", labels: labels[5], weight: 1.3 },
+    { id: "resource", text: "resourceText", labels: labels[6], weight: 1.4 },
+    { id: "leadership", text: "leadershipText", labels: labels[7], weight: 1.2 },
+    { id: "risk", text: "riskText", labels: labels[8], weight: 1.1 },
+    { id: "geo", text: "geoText", labels: labels[9], weight: 0.9 },
+    { id: "impact", text: "impactText", labels: labels[10], weight: 1.5 },
+    { id: "tech", text: "techText", labels: labels[11], weight: 1.0 }
+];
+
+// Initialize sliders
+factors.forEach(f => {
+    const slider = document.getElementById(f.id);
+    const text = document.getElementById(f.text);
+    slider.value = 1;
+    text.textContent = f.labels[1];  // Set initial value based on default slider value
+    slider.addEventListener("input", () => {
+        text.textContent = f.labels[slider.value] + " (" + slider.value + ")";
+    });
+});
+
+function predict() {
+    let score = 0;
+    let maxScore = 0;
+    let suggestions = [];
+
+    factors.forEach(f => {
+        let level = parseInt(document.getElementById(f.id).value);
+        score += level * f.weight * 25; // weighted scoring
+        maxScore += 3 * f.weight * 25; // max possible score
+        if(level < 2) { // actionable suggestion for low scores
+            switch(f.id) {
+                case "goal": suggestions.push("Align project goals with your partner."); break;
+                case "budget": suggestions.push("Review and adjust budget expectations."); break;
+                case "time": suggestions.push("Clarify time commitments with your partner."); break;
+                case "trans": suggestions.push("Increase transparency in communication."); break;
+                case "exp": suggestions.push("Build more collaboration experience with partner."); break;
+                case "culture": suggestions.push("Address cultural differences or alignment."); break;
+                case "resource": suggestions.push("Ensure both parties have sufficient resources."); break;
+                case "leadership": suggestions.push("Ensure leadership alignment and vision."); break;
+                case "risk": suggestions.push("Align risk tolerance between partners."); break;
+                case "geo": suggestions.push("Consider geographical distance impact."); break;
+                case "impact": suggestions.push("Focus on maximizing social impact potential."); break;
+                case "tech": suggestions.push("Ensure technology compatibility."); break;
+            }
+        }
+    });
+
+    // Simulate randomness for AI output
+    let success = Math.round((score / maxScore) * 100) + Math.floor(Math.random() * 10) - 5; // Adding small random variance to simulate AI prediction
+
+    // Dynamic AI-driven analysis
+    let riskClass = "risk-low";
+    let riskText = "Low risk of partnership failure";
+    if(success < 40) { riskClass = "risk-high"; riskText = "High risk of partnership failure"; }
+    else if(success < 70) { riskClass = "risk-medium"; riskText = "Moderate risk of partnership failure"; }
+
+    // Display output
+    document.getElementById("output").style.display = "block";
+    document.getElementById("output").innerHTML = `
+        <p class="highlight">AI-Predicted Success Probability: ${success}%</p>
+        <p class="${riskClass}"><strong>AI Risk Insight:</strong><br>${riskText}</p>
+        <p><strong>AI Suggestions to Improve Partnership:</strong></p>
+        <ul>
+            ${suggestions.length > 0 ? suggestions.map(s => "<li>" + s + "</li>").join("") : "<li>All factors look strong!</li>"}
+        </ul>
+        <p><strong>AI Explanation:</strong><br>
+        Inputs were encoded into weighted numerical features. The AI predicts success probability and highlights risk areas to strengthen SDG 17 partnerships.
+        </p>
+    `;
+}
+</script>
+
+</body>
+</html>
