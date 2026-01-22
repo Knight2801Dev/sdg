@@ -12,6 +12,7 @@ h2 { text-align:center; color:#34495e; }
 label { font-weight: bold; display: flex; justify-content: space-between; margin-top: 12px; }
 .value-text { color: #2980b9; font-style: italic; }
 input[type=range] { width: 100%; margin-bottom: 12px; }
+input[type=text] { width: 90%; padding:5px; margin-bottom:15px; font-size:16px; text-align:center; }
 button { width: 100%; padding: 15px; font-size: 18px; background: #27ae60; border: none; color: white; border-radius: 6px; cursor: pointer; margin-top: 20px; }
 button:hover { background:#2ecc71; }
 .result { margin-top: 30px; background: #f4f6f8; padding: 25px; border-radius: 10px; }
@@ -30,7 +31,8 @@ ul { margin-top:10px; }
 
 <!-- PARTY A -->
 <div class="container">
-<h2>🌍 Party A</h2>
+<input type="text" id="nameA" placeholder="Enter Party A Name" value="Party A">
+<h2 id="headerA">🌍 Party A</h2>
 <label>Goal Alignment <span class="value-text" id="goalTextA"></span></label><input type="range" id="goalA" min="0" max="3" step="1">
 <label>Budget Compatibility <span class="value-text" id="budgetTextA"></span></label><input type="range" id="budgetA" min="0" max="3" step="1">
 <label>Time Commitment Balance <span class="value-text" id="timeTextA"></span></label><input type="range" id="timeA" min="0" max="3" step="1">
@@ -47,7 +49,8 @@ ul { margin-top:10px; }
 
 <!-- PARTY B -->
 <div class="container">
-<h2>🌎 Party B</h2>
+<input type="text" id="nameB" placeholder="Enter Party B Name" value="Party B">
+<h2 id="headerB">🌎 Party B</h2>
 <label>Goal Alignment <span class="value-text" id="goalTextB"></span></label><input type="range" id="goalB" min="0" max="3" step="1">
 <label>Budget Compatibility <span class="value-text" id="budgetTextB"></span></label><input type="range" id="budgetB" min="0" max="3" step="1">
 <label>Time Commitment Balance <span class="value-text" id="timeTextB"></span></label><input type="range" id="timeB" min="0" max="3" step="1">
@@ -69,19 +72,20 @@ ul { margin-top:10px; }
 <div class="result" id="output" style="display:none;"></div>
 
 <script>
+// Slider labels
 const labels = [
-  ["Completely Misaligned", "Somewhat Aligned", "Mostly Aligned", "Fully Aligned"],
-  ["Budget Conflicts Likely", "Minor Budget Issues", "Budget Mostly Compatible", "Budget Perfectly Aligned"],
-  ["No Commitment", "Partial Commitment", "Mostly Committed", "Fully Committed"],
-  ["Opaque", "Some Transparency", "Mostly Transparent", "Fully Transparent"],
-  ["No Collaboration History", "Limited Experience", "Moderate Experience", "Extensive Experience"],
-  ["Completely Incompatible", "Minor Differences", "Mostly Compatible", "Completely Aligned"],
-  ["Severe Resource Shortage", "Some Resource Issues", "Mostly Adequate Resources", "Fully Equipped"],
-  ["No Leadership Alignment", "Partial Alignment", "Mostly Aligned", "Fully Aligned Leadership"],
-  ["Very Low Tolerance", "Somewhat Low", "Moderate Tolerance", "High Tolerance for Risk"],
-  ["Very Distant", "Somewhat Distant", "Close", "Very Close (Same Region)"],
-  ["No Impact", "Minimal Impact", "Moderate Impact", "High Social Impact Potential"],
-  ["Completely Incompatible", "Minor Issues", "Mostly Compatible", "Fully Compatible Technologies"]
+  ["Completely Misaligned","Somewhat Aligned","Mostly Aligned","Fully Aligned"],
+  ["Budget Conflicts Likely","Minor Budget Issues","Budget Mostly Compatible","Budget Perfectly Aligned"],
+  ["No Commitment","Partial Commitment","Mostly Committed","Fully Committed"],
+  ["Opaque","Some Transparency","Mostly Transparent","Fully Transparent"],
+  ["No Collaboration History","Limited Experience","Moderate Experience","Extensive Experience"],
+  ["Completely Incompatible","Minor Differences","Mostly Compatible","Completely Aligned"],
+  ["Severe Resource Shortage","Some Resource Issues","Mostly Adequate Resources","Fully Equipped"],
+  ["No Leadership Alignment","Partial Alignment","Mostly Aligned","Fully Aligned Leadership"],
+  ["Very Low Tolerance","Somewhat Low","Moderate Tolerance","High Tolerance for Risk"],
+  ["Very Distant","Somewhat Distant","Close","Very Close (Same Region)"],
+  ["No Impact","Minimal Impact","Moderate Impact","High Social Impact Potential"],
+  ["Completely Incompatible","Minor Issues","Mostly Compatible","Fully Compatible Technologies"]
 ];
 
 const factors = ["goal","budget","time","trans","exp","culture","resource","leadership","risk","geo","impact","tech"];
@@ -102,77 +106,39 @@ factors.forEach((f,i)=>{
 
 // Interpretive messages per factor
 const interpretiveMessages = {
-  goal: ["Party A and B goals are completely misaligned; high risk of conflict.",
-         "Party A and B have some goal alignment; minor adjustments needed.",
-         "Party A and B mostly share goals; moderate risk.",
-         "Party A and B goals are fully aligned; very low risk."],
-  budget: ["Party A has severe budget issues while Party B has plenty; fairness and execution may fail.",
-           "Minor budget differences; discuss allocations to avoid friction.",
-           "Budgets mostly compatible; small coordination needed.",
-           "Budgets perfectly aligned; low risk."],
-  time: ["Party A and B time commitments are mismatched; may cause delays.",
-         "Some differences in availability; careful scheduling needed.",
-         "Mostly aligned time commitments; manageable.",
-         "Fully aligned; low risk."],
-  trans: ["Transparency mismatch; potential miscommunication.",
-          "Some transparency gaps; clarify expectations.",
-          "Mostly transparent; minor risk.",
-          "Fully transparent; good communication."],
-  exp: ["Party A has little experience and B has extensive; collaboration may struggle.",
-        "Some experience differences; may require mentoring.",
-        "Moderate experience; minor adjustment needed.",
-        "Extensive experience alignment; low risk."],
-  culture: ["Cultural clash likely; may hinder teamwork.",
-            "Minor cultural differences; awareness needed.",
-            "Mostly compatible cultures; moderate risk.",
-            "Cultures fully aligned; low risk."],
-  resource: ["Party A has far fewer resources than B; partnership may be unbalanced.",
-             "Some differences in resources; plan carefully.",
-             "Mostly adequate resources; manageable.",
-             "Resources fully sufficient; low risk."],
-  leadership: ["Leadership misaligned; vision conflict likely.",
-               "Partial alignment; negotiation needed.",
-               "Mostly aligned leadership; minor risk.",
-               "Leadership fully aligned; low risk."],
-  risk: ["Mismatch in risk tolerance; may cause conflict in decisions.",
-         "Some differences; agree on risk policy.",
-         "Moderate risk tolerance alignment; minor risk.",
-         "High risk tolerance alignment; low risk."],
-  geo: ["Parties are geographically far apart; coordination will be hard.",
-        "Some distance; manage logistics carefully.",
-        "Close enough; manageable.",
-        "Same region; easy coordination."],
-  impact: ["Party A expects high impact, B little; misaligned priorities.",
-           "Some difference in social impact goals; discuss.",
-           "Mostly aligned impact goals; minor risk.",
-           "Impact goals fully aligned; low risk."],
-  tech: ["Technology mismatch; integration difficult.",
-         "Some compatibility issues; minor adjustments needed.",
-         "Mostly compatible tech; low risk.",
-         "Fully compatible technologies; very low risk."]
+  goal: ["Goals completely misaligned; high risk.","Some goal alignment; minor adjustments needed.","Mostly shared goals; moderate risk.","Fully aligned goals; very low risk."],
+  budget: ["Party A has severe budget issues, Party B has plenty; fairness may fail.","Minor budget differences; discuss allocations.","Budgets mostly compatible; small coordination needed.","Budgets perfectly aligned; low risk."],
+  time: ["Time commitments mismatched; may cause delays.","Some differences; careful scheduling.","Mostly aligned; manageable.","Fully aligned; low risk."],
+  trans: ["Transparency mismatch; potential miscommunication.","Some gaps; clarify expectations.","Mostly transparent; minor risk.","Fully transparent; good communication."],
+  exp: ["Experience mismatch; collaboration may struggle.","Some differences; may require mentoring.","Moderate experience; minor adjustment needed.","Extensive experience alignment; low risk."],
+  culture: ["Cultural clash likely; may hinder teamwork.","Minor differences; awareness needed.","Mostly compatible; moderate risk.","Fully aligned; low risk."],
+  resource: ["Resources imbalanced; partnership may struggle.","Some differences; plan carefully.","Mostly adequate; manageable.","Fully sufficient; low risk."],
+  leadership: ["Leadership misaligned; vision conflict likely.","Partial alignment; negotiation needed.","Mostly aligned; minor risk.","Fully aligned; low risk."],
+  risk: ["Risk tolerance mismatch; may cause conflict.","Some differences; agree on policy.","Moderate alignment; minor risk.","Fully aligned; low risk."],
+  geo: ["Geographically far apart; coordination hard.","Some distance; manage logistics.","Close enough; manageable.","Same region; easy coordination."],
+  impact: ["Impact priorities misaligned; may conflict.","Some differences; discuss.","Mostly aligned; minor risk.","Fully aligned; low risk."],
+  tech: ["Tech mismatch; integration difficult.","Some issues; minor adjustments.","Mostly compatible; low risk.","Fully compatible; very low risk."]
 };
 
 function predict(){
-  let total = 0, max = factors.length*3;
-  let insights = [];
+  const nameA = document.getElementById("nameA").value || "Party A";
+  const nameB = document.getElementById("nameB").value || "Party B";
 
+  let total=0,max=factors.length*3,insights=[];
   factors.forEach((f,i)=>{
-    const a = parseInt(document.getElementById(f+"A").value);
-    const b = parseInt(document.getElementById(f+"B").value);
-    const diff = Math.abs(a-b);
-
-    total += 3 - diff;
-
-    // If difference is significant, add interpretive insight
+    const a=parseInt(document.getElementById(f+"A").value);
+    const b=parseInt(document.getElementById(f+"B").value);
+    const diff=Math.abs(a-b);
+    total+=3-diff;
     if(diff>0){
-      const key = f;
-      const idx = Math.min(Math.floor((a+b)/2),3);
-      insights.push(interpretiveMessages[key][idx]);
+      const idx=Math.min(Math.floor((a+b)/2),3);
+      let msg = interpretiveMessages[f][idx].replace("Party A", nameA).replace("Party B", nameB);
+      insights.push(msg);
     }
   });
 
-  const success = Math.round((total/max)*100);
-  let riskClass="risk-low", riskText="Low risk of partnership failure";
+  const success=Math.round((total/max)*100);
+  let riskClass="risk-low",riskText="Low risk of partnership failure";
   if(success<40){ riskClass="risk-high"; riskText="High risk of partnership failure";}
   else if(success<70){ riskClass="risk-medium"; riskText="Moderate risk of partnership failure";}
 
@@ -185,6 +151,5 @@ function predict(){
   `;
 }
 </script>
-
 </body>
 </html>
