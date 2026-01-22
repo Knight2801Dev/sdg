@@ -31,7 +31,7 @@ ul { margin-top:10px; }
 
 <!-- PARTY A -->
 <div class="container">
-<input type="text" id="nameA" placeholder="Enter Party A Name" value="Party A">
+<input type="text" id="nameA" placeholder="Enter Party A Name">
 <h2 id="headerA">🌍 Party A</h2>
 <label>Goal Alignment <span class="value-text" id="goalTextA"></span></label><input type="range" id="goalA" min="0" max="3" step="1">
 <label>Budget Compatibility <span class="value-text" id="budgetTextA"></span></label><input type="range" id="budgetA" min="0" max="3" step="1">
@@ -49,7 +49,7 @@ ul { margin-top:10px; }
 
 <!-- PARTY B -->
 <div class="container">
-<input type="text" id="nameB" placeholder="Enter Party B Name" value="Party B">
+<input type="text" id="nameB" placeholder="Enter Party B Name">
 <h2 id="headerB">🌎 Party B</h2>
 <label>Goal Alignment <span class="value-text" id="goalTextB"></span></label><input type="range" id="goalB" min="0" max="3" step="1">
 <label>Budget Compatibility <span class="value-text" id="budgetTextB"></span></label><input type="range" id="budgetB" min="0" max="3" step="1">
@@ -68,7 +68,6 @@ ul { margin-top:10px; }
 </div>
 
 <button onclick="predict()">Run Joint AI Analysis</button>
-
 <div class="result" id="output" style="display:none;"></div>
 
 <script>
@@ -104,19 +103,62 @@ factors.forEach((f,i)=>{
   b.oninput = ()=> tb.textContent=labels[i][b.value]+" ("+b.value+")";
 });
 
-// Dynamic headers for typed names
+// Dynamic headers from input placeholders
 document.getElementById("nameA").addEventListener("input", ()=>{
-  document.getElementById("headerA").textContent = "🌍 " + (document.getElementById("nameA").value || "Party A");
+  const val = document.getElementById("nameA").value.trim();
+  document.getElementById("headerA").textContent = "🌍 " + (val || "Party A");
 });
 document.getElementById("nameB").addEventListener("input", ()=>{
-  document.getElementById("headerB").textContent = "🌎 " + (document.getElementById("nameB").value || "Party B");
+  const val = document.getElementById("nameB").value.trim();
+  document.getElementById("headerB").textContent = "🌎 " + (val || "Party B");
 });
 
 // Interpretive messages
 const interpretiveMessages = {
   goal: ["Goals completely misaligned; high risk.","Some goal alignment; minor adjustments needed.","Mostly shared goals; moderate risk.","Fully aligned goals; very low risk."],
-  budget: ["Party A has severe budget issues, Party B has plenty; fairness may fail.","Minor budget differences; discuss allocations.","Budgets mostly compatible; small coordination needed.","Budgets perfectly aligned; low risk."],
+  budget: ["Budget mismatch; fairness issues likely.","Minor budget differences; discuss allocations.","Budgets mostly compatible; small coordination needed.","Budgets perfectly aligned; low risk."],
   time: ["Time commitments mismatched; may cause delays.","Some differences; careful scheduling.","Mostly aligned; manageable.","Fully aligned; low risk."],
   trans: ["Transparency mismatch; potential miscommunication.","Some gaps; clarify expectations.","Mostly transparent; minor risk.","Fully transparent; good communication."],
   exp: ["Experience mismatch; collaboration may struggle.","Some differences; may require mentoring.","Moderate experience; minor adjustment needed.","Extensive experience alignment; low risk."],
-  culture: ["Cultural clash likely; may hinder teamwork.","Minor differences; awareness needed.","Mostly compatible; moder]()
+  culture: ["Cultural clash likely; may hinder teamwork.","Minor differences; awareness needed.","Mostly compatible; moderate risk.","Fully aligned; low risk."],
+  resource: ["Resources imbalanced; partnership may struggle.","Some differences; plan carefully.","Mostly adequate; manageable.","Fully sufficient; low risk."],
+  leadership: ["Leadership misaligned; vision conflict likely.","Partial alignment; negotiation needed.","Mostly aligned; minor risk.","Fully aligned; low risk."],
+  risk: ["Risk tolerance mismatch; may cause conflict.","Some differences; agree on policy.","Moderate alignment; minor risk.","Fully aligned; low risk."],
+  geo: ["Geographically far apart; coordination hard.","Some distance; manage logistics.","Close enough; manageable.","Same region; easy coordination."],
+  impact: ["Impact priorities misaligned; may conflict.","Some differences; discuss.","Mostly aligned; minor risk.","Fully aligned; low risk."],
+  tech: ["Tech mismatch; integration difficult.","Some issues; minor adjustments.","Mostly compatible; low risk.","Fully compatible; very low risk."]
+};
+
+function predict(){
+  const nameA = document.getElementById("nameA").value.trim() || "Party A";
+  const nameB = document.getElementById("nameB").value.trim() || "Party B";
+
+  let total=0,max=factors.length*3,insights=[];
+  factors.forEach((f,i)=>{
+    const a=parseInt(document.getElementById(f+"A").value);
+    const b=parseInt(document.getElementById(f+"B").value);
+    const diff=Math.abs(a-b);
+    total+=3-diff;
+    if(diff>0){
+      const idx=Math.min(Math.floor((a+b)/2),3);
+      let msg = interpretiveMessages[f][idx].replace("Party A", nameA).replace("Party B", nameB);
+      insights.push(msg);
+    }
+  });
+
+  const success=Math.round((total/max)*100);
+  let riskClass="risk-low",riskText="Low risk of partnership failure";
+  if(success<40){ riskClass="risk-high"; riskText="High risk of partnership failure";}
+  else if(success<70){ riskClass="risk-medium"; riskText="Moderate risk of partnership failure";}
+
+  document.getElementById("output").style.display="block";
+  document.getElementById("output").innerHTML=`
+    <p class="highlight">AI Partnership Success Probability: ${success}%</p>
+    <p class="${riskClass}"><strong>AI Risk Insight:</strong><br>${riskText}</p>
+    <p><strong>AI Analysis and Recommendations:</strong></p>
+    <ul>${insights.length ? insights.map(i=>`<li>${i}</li>`).join("") : "<li>No major misalignments detected.</li>"}</ul>
+  `;
+}
+</script>
+</body>
+</html>
