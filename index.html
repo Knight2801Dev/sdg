@@ -2,76 +2,81 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Partnership Failure Predictor – Two Parties (SDG 17)</title>
+<title>AI Partnership Compatibility Predictor – SDG 17</title>
 
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background: #edf1f2;
-    padding: 30px;
+  font-family: Arial, sans-serif;
+  background: #edf1f2;
+  padding: 30px;
 }
 
 .wrapper {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .container {
-    width: 50%;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+  width: 50%;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 
 h1 {
-    text-align: center;
-    color: #2c3e50;
+  text-align: center;
+  color: #2c3e50;
+}
+
+h2 {
+  text-align: center;
+  color: #34495e;
 }
 
 label {
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 .value-text {
-    color: #2980b9;
-    font-style: italic;
+  color: #2980b9;
+  font-style: italic;
 }
 
 input[type=range] {
-    width: 100%;
-    margin-bottom: 10px;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    background: #27ae60;
-    border: none;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  background: #27ae60;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
 button:hover {
-    background: #2ecc71;
+  background: #2ecc71;
 }
 
 .result {
-    margin-top: 20px;
-    background: #f4f6f8;
-    padding: 15px;
-    border-radius: 10px;
+  margin-top: 30px;
+  background: #f4f6f8;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .highlight {
-    font-size: 22px;
-    font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .risk-high { color: #c0392b; }
@@ -82,125 +87,136 @@ button:hover {
 
 <body>
 
+<h1>🤝 AI Partnership Compatibility Predictor (SDG 17)</h1>
+
 <div class="wrapper">
 
-<!-- ================= PARTY A ================= -->
-<div class="container">
-<h1>🤖 Party A AI Predictor</h1>
+  <!-- PARTY A -->
+  <div class="container">
+    <h2>🌍 Party A</h2>
 
-<label>Goal Alignment <span class="value-text" id="goalTextA"></span></label>
-<input type="range" id="goalA" min="0" max="3" step="1">
+    <label>Goal Alignment <span class="value-text" id="goalTextA"></span></label>
+    <input type="range" id="goalA" min="0" max="3" step="1">
 
-<label>Budget Compatibility <span class="value-text" id="budgetTextA"></span></label>
-<input type="range" id="budgetA" min="0" max="3" step="1">
+    <label>Budget Compatibility <span class="value-text" id="budgetTextA"></span></label>
+    <input type="range" id="budgetA" min="0" max="3" step="1">
 
-<label>Transparency <span class="value-text" id="transTextA"></span></label>
-<input type="range" id="transA" min="0" max="3" step="1">
+    <label>Transparency <span class="value-text" id="transTextA"></span></label>
+    <input type="range" id="transA" min="0" max="3" step="1">
 
-<label>Cultural Alignment <span class="value-text" id="cultureTextA"></span></label>
-<input type="range" id="cultureA" min="0" max="3" step="1">
+    <label>Cultural Alignment <span class="value-text" id="cultureTextA"></span></label>
+    <input type="range" id="cultureA" min="0" max="3" step="1">
 
-<label>Technology Compatibility <span class="value-text" id="techTextA"></span></label>
-<input type="range" id="techA" min="0" max="3" step="1">
+    <label>Technology Compatibility <span class="value-text" id="techTextA"></span></label>
+    <input type="range" id="techA" min="0" max="3" step="1">
+  </div>
 
-<button onclick="predictA()">Run AI Analysis</button>
-<div class="result" id="outputA" style="display:none;"></div>
-</div>
+  <!-- PARTY B -->
+  <div class="container">
+    <h2>🌎 Party B</h2>
 
-<!-- ================= PARTY B ================= -->
-<div class="container">
-<h1>🤖 Party B AI Predictor</h1>
+    <label>Goal Alignment <span class="value-text" id="goalTextB"></span></label>
+    <input type="range" id="goalB" min="0" max="3" step="1">
 
-<label>Goal Alignment <span class="value-text" id="goalTextB"></span></label>
-<input type="range" id="goalB" min="0" max="3" step="1">
+    <label>Budget Compatibility <span class="value-text" id="budgetTextB"></span></label>
+    <input type="range" id="budgetB" min="0" max="3" step="1">
 
-<label>Budget Compatibility <span class="value-text" id="budgetTextB"></span></label>
-<input type="range" id="budgetB" min="0" max="3" step="1">
+    <label>Transparency <span class="value-text" id="transTextB"></span></label>
+    <input type="range" id="transB" min="0" max="3" step="1">
 
-<label>Transparency <span class="value-text" id="transTextB"></span></label>
-<input type="range" id="transB" min="0" max="3" step="1">
+    <label>Cultural Alignment <span class="value-text" id="cultureTextB"></span></label>
+    <input type="range" id="cultureB" min="0" max="3" step="1">
 
-<label>Cultural Alignment <span class="value-text" id="cultureTextB"></span></label>
-<input type="range" id="cultureB" min="0" max="3" step="1">
-
-<label>Technology Compatibility <span class="value-text" id="techTextB"></span></label>
-<input type="range" id="techB" min="0" max="3" step="1">
-
-<button onclick="predictB()">Run AI Analysis</button>
-<div class="result" id="outputB" style="display:none;"></div>
-</div>
+    <label>Technology Compatibility <span class="value-text" id="techTextB"></span></label>
+    <input type="range" id="techB" min="0" max="3" step="1">
+  </div>
 
 </div>
+
+<button onclick="predict()">Run AI Partnership Analysis</button>
+
+<div class="result" id="output" style="display:none;"></div>
 
 <script>
 const labels = ["Very Low", "Low", "High", "Very High"];
 
-// Init sliders Party A
-["goal","budget","trans","culture","tech"].forEach(id=>{
-  const s = document.getElementById(id+"A");
-  const t = document.getElementById(id+"TextA");
-  s.value = 1;
-  t.textContent = labels[1];
-  s.oninput = ()=> t.textContent = labels[s.value]+" ("+s.value+")";
+const sliders = [
+  "goal","budget","trans","culture","tech"
+];
+
+// initialize all sliders
+sliders.forEach(id => {
+  let a = document.getElementById(id+"A");
+  let b = document.getElementById(id+"B");
+  let ta = document.getElementById(id+"TextA");
+  let tb = document.getElementById(id+"TextB");
+
+  a.value = 1;
+  b.value = 1;
+  ta.textContent = labels[1];
+  tb.textContent = labels[1];
+
+  a.oninput = () => ta.textContent = labels[a.value] + " ("+a.value+")";
+  b.oninput = () => tb.textContent = labels[b.value] + " ("+b.value+")";
 });
 
-// Init sliders Party B
-["goal","budget","trans","culture","tech"].forEach(id=>{
-  const s = document.getElementById(id+"B");
-  const t = document.getElementById(id+"TextB");
-  s.value = 1;
-  t.textContent = labels[1];
-  s.oninput = ()=> t.textContent = labels[s.value]+" ("+s.value+")";
-});
+function predict() {
+  let total = 0;
+  let max = sliders.length * 3 * 2; // both parties
 
-function runAI(sliders) {
-  let total = sliders.reduce((a,b)=>a+b,0);
-  let success = Math.round((total / (sliders.length*3))*100);
-  
+  let weakAreas = [];
+
+  sliders.forEach(id => {
+    let a = parseInt(document.getElementById(id+"A").value);
+    let b = parseInt(document.getElementById(id+"B").value);
+
+    // compatibility logic
+    let compatibility = 3 - Math.abs(a - b);
+    total += compatibility;
+
+    if (compatibility < 2) {
+      weakAreas.push(id);
+    }
+  });
+
+  let success = Math.round((total / max) * 100);
+
   let riskClass = "risk-low";
   let riskText = "Low risk of partnership failure";
-  if(success < 40){ riskClass="risk-high"; riskText="High risk of partnership failure"; }
-  else if(success < 70){ riskClass="risk-medium"; riskText="Moderate risk of partnership failure"; }
+  if (success < 40) {
+    riskClass = "risk-high";
+    riskText = "High risk of partnership failure";
+  } else if (success < 70) {
+    riskClass = "risk-medium";
+    riskText = "Moderate risk of partnership failure";
+  }
 
-  return {success, riskClass, riskText};
-}
+  let suggestions = {
+    goal: "Align strategic goals through joint development agendas.",
+    budget: "Create transparent and balanced financing mechanisms.",
+    trans: "Improve diplomatic transparency and information sharing.",
+    culture: "Strengthen cultural understanding through exchange programs.",
+    tech: "Harmonize technological standards and infrastructure."
+  };
 
-function predictA(){
-  let data = [
-    +goalA.value,
-    +budgetA.value,
-    +transA.value,
-    +cultureA.value,
-    +techA.value
-  ];
+  document.getElementById("output").style.display = "block";
+  document.getElementById("output").innerHTML = `
+    <p class="highlight">AI Partnership Success Probability: ${success}%</p>
+    <p class="${riskClass}"><strong>${riskText}</strong></p>
 
-  let ai = runAI(data);
-  outputA.style.display="block";
-  outputA.innerHTML = `
-    <p class="highlight">AI Success Probability: ${ai.success}%</p>
-    <p class="${ai.riskClass}"><strong>${ai.riskText}</strong></p>
+    <p><strong>AI Diplomatic Recommendations:</strong></p>
+    <ul>
+      ${
+        weakAreas.length > 0
+        ? weakAreas.map(w => `<li>${suggestions[w]}</li>`).join("")
+        : "<li>Excellent alignment. The partnership is highly viable under SDG 17.</li>"
+      }
+    </ul>
+
     <p><strong>AI Explanation:</strong><br>
-    This AI evaluates Party A’s readiness for international SDG-17 partnerships based on strategic alignment and technological capacity.
-    </p>
-  `;
-}
-
-function predictB(){
-  let data = [
-    +goalB.value,
-    +budgetB.value,
-    +transB.value,
-    +cultureB.value,
-    +techB.value
-  ];
-
-  let ai = runAI(data);
-  outputB.style.display="block";
-  outputB.innerHTML = `
-    <p class="highlight">AI Success Probability: ${ai.success}%</p>
-    <p class="${ai.riskClass}"><strong>${ai.riskText}</strong></p>
-    <p><strong>AI Explanation:</strong><br>
-    This AI evaluates Party B’s readiness for international SDG-17 partnerships based on strategic alignment and technological capacity.
+    The AI compares both parties across strategic, financial, cultural, and technological dimensions.
+    Higher alignment means stronger international cooperation and lower partnership failure risk,
+    supporting Sustainable Development Goal 17.
     </p>
   `;
 }
