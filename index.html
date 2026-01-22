@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>AI Partnership Failure Predictor – SDG 17</title>
 <style>
-body { font-family: Arial; background: #edf1f2; padding: 30px; }
+body { font-family: Arial, sans-serif; background: #edf1f2; padding: 30px; }
 .wrapper { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
 .container { width: 45%; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.15); }
 h1 { text-align:center; color:#2c3e50; margin-bottom: 30px; }
@@ -104,52 +104,19 @@ factors.forEach((f,i)=>{
   b.oninput = ()=> tb.textContent=labels[i][b.value]+" ("+b.value+")";
 });
 
-// Interpretive messages per factor
+// Dynamic headers for typed names
+document.getElementById("nameA").addEventListener("input", ()=>{
+  document.getElementById("headerA").textContent = "🌍 " + (document.getElementById("nameA").value || "Party A");
+});
+document.getElementById("nameB").addEventListener("input", ()=>{
+  document.getElementById("headerB").textContent = "🌎 " + (document.getElementById("nameB").value || "Party B");
+});
+
+// Interpretive messages
 const interpretiveMessages = {
   goal: ["Goals completely misaligned; high risk.","Some goal alignment; minor adjustments needed.","Mostly shared goals; moderate risk.","Fully aligned goals; very low risk."],
   budget: ["Party A has severe budget issues, Party B has plenty; fairness may fail.","Minor budget differences; discuss allocations.","Budgets mostly compatible; small coordination needed.","Budgets perfectly aligned; low risk."],
   time: ["Time commitments mismatched; may cause delays.","Some differences; careful scheduling.","Mostly aligned; manageable.","Fully aligned; low risk."],
   trans: ["Transparency mismatch; potential miscommunication.","Some gaps; clarify expectations.","Mostly transparent; minor risk.","Fully transparent; good communication."],
   exp: ["Experience mismatch; collaboration may struggle.","Some differences; may require mentoring.","Moderate experience; minor adjustment needed.","Extensive experience alignment; low risk."],
-  culture: ["Cultural clash likely; may hinder teamwork.","Minor differences; awareness needed.","Mostly compatible; moderate risk.","Fully aligned; low risk."],
-  resource: ["Resources imbalanced; partnership may struggle.","Some differences; plan carefully.","Mostly adequate; manageable.","Fully sufficient; low risk."],
-  leadership: ["Leadership misaligned; vision conflict likely.","Partial alignment; negotiation needed.","Mostly aligned; minor risk.","Fully aligned; low risk."],
-  risk: ["Risk tolerance mismatch; may cause conflict.","Some differences; agree on policy.","Moderate alignment; minor risk.","Fully aligned; low risk."],
-  geo: ["Geographically far apart; coordination hard.","Some distance; manage logistics.","Close enough; manageable.","Same region; easy coordination."],
-  impact: ["Impact priorities misaligned; may conflict.","Some differences; discuss.","Mostly aligned; minor risk.","Fully aligned; low risk."],
-  tech: ["Tech mismatch; integration difficult.","Some issues; minor adjustments.","Mostly compatible; low risk.","Fully compatible; very low risk."]
-};
-
-function predict(){
-  const nameA = document.getElementById("nameA").value || "Party A";
-  const nameB = document.getElementById("nameB").value || "Party B";
-
-  let total=0,max=factors.length*3,insights=[];
-  factors.forEach((f,i)=>{
-    const a=parseInt(document.getElementById(f+"A").value);
-    const b=parseInt(document.getElementById(f+"B").value);
-    const diff=Math.abs(a-b);
-    total+=3-diff;
-    if(diff>0){
-      const idx=Math.min(Math.floor((a+b)/2),3);
-      let msg = interpretiveMessages[f][idx].replace("Party A", nameA).replace("Party B", nameB);
-      insights.push(msg);
-    }
-  });
-
-  const success=Math.round((total/max)*100);
-  let riskClass="risk-low",riskText="Low risk of partnership failure";
-  if(success<40){ riskClass="risk-high"; riskText="High risk of partnership failure";}
-  else if(success<70){ riskClass="risk-medium"; riskText="Moderate risk of partnership failure";}
-
-  document.getElementById("output").style.display="block";
-  document.getElementById("output").innerHTML=`
-    <p class="highlight">AI Partnership Success Probability: ${success}%</p>
-    <p class="${riskClass}"><strong>AI Risk Insight:</strong><br>${riskText}</p>
-    <p><strong>AI Analysis and Recommendations:</strong></p>
-    <ul>${insights.length ? insights.map(i=>`<li>${i}</li>`).join("") : "<li>No major misalignments detected.</li>"}</ul>
-  `;
-}
-</script>
-</body>
-</html>
+  culture: ["Cultural clash likely; may hinder teamwork.","Minor differences; awareness needed.","Mostly compatible; moder]()
