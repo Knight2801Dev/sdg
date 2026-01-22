@@ -2,71 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Partnership Compatibility Analyzer – SDG 17 (Two Parties)</title>
-
+<title>AI Partnership Failure Predictor – SDG 17</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #edf1f2;
-    padding: 30px;
-}
-.wrapper {
-    display: flex;
-    gap: 20px;
-}
-.container {
-    width: 50%;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.15);
-}
+body { font-family: Arial; background: #edf1f2; padding: 30px; }
+.wrapper { display: flex; gap: 20px; flex-wrap: wrap; }
+.container { width: 48%; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.15); }
 h1 { text-align:center; color:#2c3e50; }
 h2 { text-align:center; color:#34495e; }
-
-label {
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 12px;
-}
-.value-text {
-    color: #2980b9;
-    font-style: italic;
-}
-input[type=range] {
-    width: 100%;
-    margin-bottom: 12px;
-}
-button {
-    width: 100%;
-    padding: 15px;
-    font-size: 18px;
-    background: #27ae60;
-    border: none;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 20px;
-}
+label { font-weight: bold; display: flex; justify-content: space-between; margin-top: 12px; }
+.value-text { color: #2980b9; font-style: italic; }
+input[type=range] { width: 100%; margin-bottom: 12px; }
+button { width: 100%; padding: 15px; font-size: 18px; background: #27ae60; border: none; color: white; border-radius: 6px; cursor: pointer; margin-top: 20px; }
 button:hover { background:#2ecc71; }
-
-.result {
-    margin-top: 30px;
-    background: #f4f6f8;
-    padding: 25px;
-    border-radius: 10px;
-}
-.highlight {
-    font-size: 24px;
-    font-weight: bold;
-}
+.result { margin-top: 30px; background: #f4f6f8; padding: 25px; border-radius: 10px; }
+.highlight { font-size: 24px; font-weight: bold; }
 .risk-high { color:#c0392b; }
 .risk-medium { color:#d68910; }
 .risk-low { color:#27ae60; }
 </style>
 </head>
-
 <body>
 
 <h1>🤝 AI Partnership Failure Predictor – SDG 17 (Two Parties)</h1>
@@ -139,4 +93,96 @@ button:hover { background:#2ecc71; }
 <label>Resource Availability <span class="value-text" id="resourceTextB"></span></label>
 <input type="range" id="resourceB" min="0" max="3" step="1">
 
-<label>Leadership Alignme
+<label>Leadership Alignment <span class="value-text" id="leadershipTextB"></span></label>
+<input type="range" id="leadershipB" min="0" max="3" step="1">
+
+<label>Risk Tolerance <span class="value-text" id="riskTextB"></span></label>
+<input type="range" id="riskB" min="0" max="3" step="1">
+
+<label>Geographical Proximity <span class="value-text" id="geoTextB"></span></label>
+<input type="range" id="geoB" min="0" max="3" step="1">
+
+<label>Social Impact Potential <span class="value-text" id="impactTextB"></span></label>
+<input type="range" id="impactB" min="0" max="3" step="1">
+
+<label>Technology Compatibility <span class="value-text" id="techTextB"></span></label>
+<input type="range" id="techB" min="0" max="3" step="1">
+</div>
+
+</div>
+
+<button onclick="predict()">Run Joint AI Analysis</button>
+
+<div class="result" id="output" style="display:none;"></div>
+
+<script>
+const labels = [
+  ["Completely Misaligned", "Somewhat Aligned", "Mostly Aligned", "Fully Aligned"],
+  ["Budget Conflicts Likely", "Minor Budget Issues", "Budget Mostly Compatible", "Budget Perfectly Aligned"],
+  ["No Commitment", "Partial Commitment", "Mostly Committed", "Fully Committed"],
+  ["Opaque", "Some Transparency", "Mostly Transparent", "Fully Transparent"],
+  ["No Collaboration History", "Limited Experience", "Moderate Experience", "Extensive Experience"],
+  ["Completely Incompatible", "Minor Differences", "Mostly Compatible", "Completely Aligned"],
+  ["Severe Resource Shortage", "Some Resource Issues", "Mostly Adequate Resources", "Fully Equipped"],
+  ["No Leadership Alignment", "Partial Alignment", "Mostly Aligned", "Fully Aligned Leadership"],
+  ["Very Low Tolerance", "Somewhat Low", "Moderate Tolerance", "High Tolerance for Risk"],
+  ["Very Distant", "Somewhat Distant", "Close", "Very Close (Same Region)"],
+  ["No Impact", "Minimal Impact", "Moderate Impact", "High Social Impact Potential"],
+  ["Completely Incompatible", "Minor Issues", "Mostly Compatible", "Fully Compatible Technologies"]
+];
+
+const factors = [
+  "goal","budget","time","trans","exp","culture","resource","leadership","risk","geo","impact","tech"
+];
+
+// Initialize sliders for both parties
+factors.forEach((f,i)=>{
+  const a = document.getElementById(f+"A");
+  const b = document.getElementById(f+"B");
+  const ta = document.getElementById(f+"TextA");
+  const tb = document.getElementById(f+"TextB");
+
+  a.value = 1; b.value = 1;
+  ta.textContent = labels[i][1]; tb.textContent = labels[i][1];
+
+  a.oninput = ()=> ta.textContent = labels[i][a.value] + " ("+a.value+")";
+  b.oninput = ()=> tb.textContent = labels[i][b.value] + " ("+b.value+")";
+});
+
+function predict(){
+  let total = 0;
+  let max = factors.length*3;
+  let issues = [];
+
+  factors.forEach((f,i)=>{
+    const a = parseInt(document.getElementById(f+"A").value);
+    const b = parseInt(document.getElementById(f+"B").value);
+
+    const compatibility = 3 - Math.abs(a-b);
+    total += compatibility;
+
+    if(compatibility<=1){
+      issues.push(`${f.toUpperCase()}: Party A is "${labels[i][a]}", Party B is "${labels[i][b]}"`);
+    }
+  });
+
+  const success = Math.round((total/max)*100);
+  let riskClass="risk-low", riskText="Low risk of partnership failure";
+  if(success<40){ riskClass="risk-high"; riskText="High risk of partnership failure"; }
+  else if(success<70){ riskClass="risk-medium"; riskText="Moderate risk of partnership failure"; }
+
+  document.getElementById("output").style.display="block";
+  document.getElementById("output").innerHTML=`
+    <p class="highlight">AI Partnership Success Probability: ${success}%</p>
+    <p class="${riskClass}"><strong>AI Risk Insight:</strong><br>${riskText}</p>
+    <p><strong>Detected Misalignments:</strong></p>
+    <ul>${issues.length ? issues.map(i=>`<li>${i}</li>`).join("") : "<li>No major misalignments detected.</li>"}</ul>
+    <p><strong>AI Explanation:</strong><br>
+    All 12 SDG-17 partnership dimensions for Party A and Party B are compared using detailed qualitative labels.
+    Large differences indicate risk, close values indicate strong compatibility.</p>
+  `;
+}
+</script>
+
+</body>
+</html>
